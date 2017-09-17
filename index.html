@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>Pollution Management</title>
+        <script src="http://d3js.org/d3.v3.min.js" language="JavaScript"></script>
+        <script src="liquidFillGauge.js" language="JavaScript"></script>
+        <script src="jquery-3.2.1.js"></script>
+        <link rel="stylesheet" type="text/css" href="main.css">
+    </head>
+    <body>
+        <svg id="pollutionGauge" width="19%" height="19%" style="position: fixed; top: 4; right: 0;" onclick="pollutionGauge.updatePollutionGauge(increasePollution());"></svg>
+        <div id="lost-screen">You lost!</div>
+        <div class="pollution">
+            <section id="column-left" class="column" style="float: left;">
+                <div id="clouds-left" class="clouds">
+                    <div id="drop-left" class="drop"></div>
+                </div>
+                <div id="pipe-left" class="pipe"></div>
+            </section>
+            <section id="column-mid" class="column" style="float: middle;">
+                <div id="clouds-mid" class="clouds">
+                    <div id="drop-mid" class="drop"></div>
+                </div>
+                <div id="pipe-mid" class="pipe"></div>
+            </section>
+            <section id="column-right" class="column" style="float: right;">
+                <div id="clouds-right" class="clouds" style="float: right;">
+                    <div id="drop-right" class="drop"></div>
+                </div>
+                <div id="pipe-right" class="pipe" style="margin-left: 11%"></div>
+            </section>
+        </div>
+        <script language="JavaScript">
+            var pollutionLevel = 0;
+            var pollutionGauge = loadLiquidFillGauge("pollutionGauge", pollutionLevel);
+            
+            function increasePollution() {
+                pollutionLevel = pollutionLevel + 0.01;
+                return pollutionLevel;
+            }
+
+            function dropPollution(side) {
+                var drop = $('#clouds-' + side).clone();
+                // drop.append('<div class="drop"></div>');
+                $('#clouds-' + side).remove();
+                $('#column-' + side).prepend(drop);
+            }
+
+            var timer = setInterval(rain, 1000);
+            function rain() {
+                var clouds = ["left", "mid", "right"];
+                var index1 = Math.floor(Math.random() * 100 % clouds.length);
+                // var index2 = Math.floor(Math.random() * 100 % clouds.length);
+                // while (index2 == index1) index2 = Math.floor(Math.random() * 100 % clouds.length);
+                dropPollution(clouds[index1]);
+                // dropPollution(clouds[index2]);
+            }
+        </script>
+    </body>
+</html>
