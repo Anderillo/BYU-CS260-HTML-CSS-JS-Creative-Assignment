@@ -9,52 +9,94 @@
         <link rel="stylesheet" type="text/css" href="main.css">
     </head>
     <body>
-        <svg id="pollutionGauge" width="19%" height="19%" style="position: fixed; top: 4; right: 0;" onclick="pollutionGauge.updatePollutionGauge(increasePollution());"></svg>
+        <svg id="pollutionGauge" width="19%" height="19%" style="position: fixed; top: 4; right: -4;"></svg>
         <div id="lost-screen">You lost!</div>
         <div class="pollution">
             <section id="column-left" class="column" style="float: left;">
-                <div id="clouds-left" class="clouds">
-                    <div id="drop-left" class="drop"></div>
-                </div>
+                <canvas id="clouds-left" class="clouds" width=100 style="height: 100%"></canvas>
                 <div id="pipe-left" class="pipe"></div>
             </section>
             <section id="column-mid" class="column" style="float: middle;">
-                <div id="clouds-mid" class="clouds">
-                    <div id="drop-mid" class="drop"></div>
-                </div>
+                <canvas id="clouds-mid" class="clouds" width=100 style="height: 100%"></canvas>
                 <div id="pipe-mid" class="pipe"></div>
             </section>
             <section id="column-right" class="column" style="float: right;">
-                <div id="clouds-right" class="clouds" style="float: right;">
-                    <div id="drop-right" class="drop"></div>
-                </div>
-                <div id="pipe-right" class="pipe" style="margin-left: 11%"></div>
+                <canvas id="clouds-right" class="clouds" width=100 style="height: 100%"></canvas>
+                <div id="pipe-right" class="pipe"></div>
             </section>
         </div>
         <script language="JavaScript">
             var pollutionLevel = 0;
             var pollutionGauge = loadLiquidFillGauge("pollutionGauge", pollutionLevel);
+            var clouds = [document.getElementById("clouds-left"), document.getElementById("clouds-mid"), document.getElementById("clouds-right")];
+            var drop_possibilities = [{'index':0,'x':45,'y':0}, {'index':1,'x':45,'y':0}, {'index':2,'x':45,'y':0}];
+            var drops = [];
+            var ctxs = [clouds[0].getContext("2d"), clouds[1].getContext("2d"), clouds[2].getContext("2d")];
+
+            function drawDrop(ctx, x, y) {
+                ctx.beginPath();
+                ctx.fillStyle = "#AAAA39";
+                ctx.moveTo(x - 2.25, y);
+                ctx.lineTo(x, y - 5);
+                ctx.lineTo(x + 2.25, y);
+                ctx.arc(x, y, 2.25, 0, 2 * Math.PI);
+                ctx.closePath();
+                ctx.fill();
+                
+                return {
+                    'x': x,
+                    'y': y
+                };
+            }
+    
+            function drawBackground(){
+                for (var i = 0; i < clouds.length; i++) {
+                    ctxs[i].fillStyle = "ghostwhite";
+                    ctxs[i].fillRect(0, 0, clouds[i].width, clouds[i].height);
+                    ctxs[i].fill();
+                }
+            }
+
+            function initPollution() {
+                drawBackground();
+                // // Draw drops
+                // var xpos = [10];//, 20, 30, 40, 50, 60, 70, 70, 76];
+                // var ypos = [30];//, 20, 60, 80, 76, 90, 30, 40, 79];
+                // for (i = 0; i < xpos.length; i++) {
+                //     drops.push(drawDrop(xpos[i], ypos[i]));
+                // }
+            }
+            initPollution();
+
+            function drawPollution() {
+                drawBackground();
+                //Draw drops
+                for (var i = 0; i < drops.length; i++) {
+                    // Update position
+                    if (drops[i] == null || drops[i].y >= clouds[drops[i].index].height) {
+                        pollutionGauge.updatePollutionGauge(increasePollutionLevel());
+                        for (var j = i; j < drops.length; j++) drops[j] = drops[j + 1];
+                        drops.pop();
+                        i--;
+                    }
+                    else {
+                        drops[i].y += 2;
+                        drawDrop(ctxs[drops[i].index], drops[i].x, drops[i].y);
+                    }
+                }
+            }
+            var pollution_timer = setInterval(drawPollution, 10);
+
+            function addDrop() {
+                var index = Math.floor(Math.random() * 100 % drop_possibilities.length);
+                var temp_drop = drop_possibilities[index];
+                drops.push({'index':drop_possibilities[index].index,'x':drop_possibilities[index].x,'y':drop_possibilities[index].y});
+            }
+            var drop_timer = setInterval(addDrop, 1000);
             
-            function increasePollution() {
-                pollutionLevel = pollutionLevel + 12;
+            function increasePollutionLevel() {
+                pollutionLevel = pollutionLevel + 1;
                 return pollutionLevel;
-            }
-
-            function dropPollution(side) {
-                var drop = $('#clouds-' + side).clone();
-                // drop.append('<div class="drop"></div>');
-                $('#clouds-' + side).remove();
-                $('#column-' + side).prepend(drop);
-            }
-
-            var timer = setInterval(rain, 1000);
-            function rain() {
-                var clouds = ["left", "mid", "right"];
-                var index1 = Math.floor(Math.random() * 100 % clouds.length);
-                // var index2 = Math.floor(Math.random() * 100 % clouds.length);
-                // while (index2 == index1) index2 = Math.floor(Math.random() * 100 % clouds.length);
-                dropPollution(clouds[index1]);
-                // dropPollution(clouds[index2]);
             }
         </script>
     </body>

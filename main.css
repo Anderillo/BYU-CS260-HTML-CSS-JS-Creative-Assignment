@@ -78,8 +78,8 @@ html, body {
         top: 40%;
     }
     100% { 
-        width: 20px;
-        height: 20px; 
+        width: 10px;
+        height: 10px; 
         top: 90%;
     }
 }
