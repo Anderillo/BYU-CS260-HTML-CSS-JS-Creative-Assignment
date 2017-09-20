@@ -131,10 +131,10 @@ function loadLiquidFillGauge(elementId, value) {
                 .each("end", function(){
                     wave.attr('transform', 'translate(' + waveAnimateScale(0) + ',0)');
                     animateWave(config.waveAnimateTime);
-                    if (value >= 100) {
+                    /*if (value >= 100) {
                         document.getElementById("lost-screen").style.display = "block";
                         return 100;
-                    }
+                    }*/
                 });
             waveGroup.transition().duration(config.waveRiseTime).attr('transform', 'translate(' + waveGroupXPosition + ',' + newHeight + ')');
             return 0;

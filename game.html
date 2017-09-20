@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head lang="en">
+    <meta charset="UTF-8">
+    <title>Pollution Management</title>
+    <script src="http://d3js.org/d3.v3.min.js" language="JavaScript"></script>
+    <script src="liquidFillGauge.js" language="JavaScript"></script>
+    <script src="jquery-3.2.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=IM+Fell+Great+Primer" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <link rel="stylesheet" type="text/css" href="game.css">
+  </head>
+  <body>
+    <div class="rain"></div>
+    <div class="overlay">
+      <div class="instructions-container text-center">
+        <div class="instructions">
+          The nearby city is polluting the ocean. Try to catch as much of the
+          acid rain as possible before the ocean's toxicity reaches
+          irreversible levels.
+        </div>
+        <button type="button" onclick="startGame()" class="btn btn-outline-dark btn-lg play">
+          Play
+        </button>
+      </div>
+    </div>
+    <div class="city"></div>
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="cloud cloud-4"></div>
+    <svg id="pollutionGauge" class="gauge"></svg>
+    <div class="score"></div>
+    <div class="wave wave-1"></div>
+    <div class="wave wave-2"></div>
+    <div class="wave wave-3"></div>
+    <div class="wave wave-4"></div>
+  </body>
+  <script type="text/javascript">
+    var drops;
+    var pollutionGauge;
+    var pollution_timer;
+    var score_timer;
+    var pollutionLevel;
+    var score;
+    function animateWaves()
+    {
+      $(".wave-1").css("background-position", "-=4");
+      $(".wave-2").css("background-position", "+=3");
+      $(".wave-3").css("background-position", "-=2");
+      $(".wave-4").css("background-position", "+=1");
+    }
+    setInterval(animateWaves, 100);
+
+    function startGame()
+    {
+      $(".overlay").remove();
+      $(".score").text("0000000000");
+      pollutionLevel = 0;
+      score = 0;
+      drops = [];
+      pollutionGauge = loadLiquidFillGauge("pollutionGauge", pollutionLevel);
+      createRain()
+      pollution_timer = setInterval(rainHandler, 10);
+      score_timer = setInterval(incrementScore, 1000);
+
+      return false;
+    }
+
+    function loseGame()
+    {
+      var drops = [];
+      let pollutionLevel = 0;
+      pollutionGauge = null;
+
+      $("#pollutionGauge").remove();
+      $(".score").text("");
+
+      $(".cloud-4").after("<svg id='pollutionGauge' class='gauge'></svg>");
+
+      $(".rain").after("<div class='overlay'>" +
+      "<div class='instructions-container text-center'>" +
+      "<div class='instructions'>You Lost</div>" +
+      "<button type='button' onclick='startGame()' class='btn btn-outline-dark btn-lg play'>" +
+      "Retry</button></div></div>");
+    }
+
+    function randRange(min, max)
+    {
+      return (Math.floor(Math.random() * (max - min + 1)) + min);
+    }
+
+    function createRain()
+    {
+      var drop_number = drops.length;
+      var target_drop_number = drop_number + 20;
+      for( i=drop_number;i<target_drop_number;i++)
+      {
+        var dropLeft = randRange(0, $(document).width());
+        var dropTop = randRange(-500, -30);
+
+        $('.rain').append('<div class="drop" id="drop_'+i+'"></div>');
+        $('#drop_'+i).css('left',dropLeft);
+        $('#drop_'+i).css('top',dropTop);
+        drops.push('#drop_'+i);
+      }
+    }
+
+    function increasePollutionLevel()
+    {
+      pollutionLevel = pollutionLevel + 1;
+      return pollutionLevel;
+    }
+
+    function rainHandler()
+    {
+      if (drops.length == 0)
+      {
+        createRain();
+        return false;
+      }
+
+      for (var i = 0; i < drops.length; i++)
+      {
+        // Update position
+        if ($(drops[i]).position().top >= $(window).height() - 200)
+        {
+          $(drops[i]).remove();
+          pollutionGauge.updatePollutionGauge(increasePollutionLevel());
+          if (pollutionLevel == 100)
+          {
+            for(var j=0; j < drops.length; j++)
+            {
+              if ($(drops[j]))
+              {
+                $(drops[j]).remove();
+                clearInterval(pollution_timer);
+                clearInterval(score_timer);
+              }
+            }
+            setTimeout(loseGame, 1000);
+          }
+
+          for (var j = i; j < drops.length; j++) drops[j] = drops[j + 1];
+          drops.pop();
+          i--;
+        }
+
+        else
+        {
+          var rate = randRange(1,4);
+          $(drops[i]).css("top", "+=" + rate);
+        }
+      }
+    }
+
+    function padScore(num, size)
+    {
+      var string = "000000000" + num;
+      return string.substr(string.length-size);
+    }
+
+    function incrementScore()
+    {
+      score += 10;
+      $(".score").text(padScore(score, 10));
+    }
+  </script>
+</html>

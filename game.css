@@ -1,0 +1,168 @@
+body
+{
+  background-color: #828C96;
+}
+
+.city
+{
+  background-image: url(assets/city.png);
+  background-repeat: repeat-x;
+  background-position: bottom;
+  width: 100vw;
+  height: 100%;
+  display: block;
+  position: absolute;
+  z-index: 2000;
+  bottom: 300px;
+}
+
+.cloud
+{
+  background-repeat: no-repeat;
+  width: 50vw;
+  height: 100%;
+  display: block;
+  position: absolute;
+}
+
+.cloud-1
+{
+  background-image: url(assets/cloud_1.png);
+  background-position: right top;
+  z-index: 1999;
+  right: 0px;
+  top: 0px;
+}
+
+.cloud-2
+{
+  background-image: url(assets/cloud_2.png);
+  background-position: left;
+  z-index: 1999;
+  top: 0px;
+  left: 0px;
+}
+
+.cloud-3
+{
+  background-image: url(assets/cloud_3.png);
+  background-position: left top;
+  z-index: 1999;
+  top: 0px;
+  left: 0px;
+}
+
+.cloud-4
+{
+  background-image: url(assets/cloud_4.png);
+  background-position: left top;
+  z-index: 1999;
+  top: 0px;
+  left: 60%;
+}
+
+.wave
+{
+  background-repeat: repeat-x;
+  background-position: bottom;
+  width: 100vw;
+  display: block;
+  position: absolute;
+}
+
+.wave-1
+{
+  background-image: url(assets/wave_1.png);
+  height: 210px;
+  bottom: 0px;
+  z-index: 2006;
+}
+
+.wave-2
+{
+  background-image: url(assets/wave_2.png);
+  height: 260px;
+  bottom: 0px;
+  z-index: 2003;
+}
+
+.wave-3
+{
+  background-image: url(assets/wave_3.png);
+  height: 270px;
+  bottom: 10px;
+  z-index: 2002;
+}
+
+.wave-4
+{
+  background-image: url(assets/wave_4.png);
+  height: 330px;
+  bottom: 0px;
+  z-index: 2001;
+}
+
+.overlay
+{
+  content: " ";
+  z-index: 2007;
+  display: block;
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.instructions-container
+{
+  margin-top: 10%;
+  font-family: 'IM Fell Great Primer', serif;
+  font-size: 2.5em;
+}
+
+.instructions
+{
+  position: relative;
+  width: 50%;
+  margin: auto;
+  z-index: 2006
+}
+
+.play
+{
+  width: 25%;
+}
+
+.gauge
+{
+  width: 10%;
+  height: 20%;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2005;
+}
+
+.score
+{
+  width: 30%;
+  height: 20%;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 2005;
+  font-size: 3em;
+  color: #555500;
+}
+
+.drop {
+  background-image: url(assets/drop.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+  z-index: 2005;
+}

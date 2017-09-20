@@ -43,18 +43,18 @@ html, body {
     border-radius: 5px;
 }
 
-.drop {
+/*.drop {
     position: absolute;
     width: 0px;
     height: 0px;
     margin: auto;
     margin-left: 15%;
-    top:0px; bottom:0;/* right:0; left:0;*/
+    top:0px; bottom:0;
     background-color: #AAAA39;
     border-radius: 50% 1px 50% 50%;
-    -webkit-transform: rotate(-45deg);  
+    -webkit-transform: rotate(-45deg);
     -webkit-animation: drip 1s linear;
-}
+}*/
 
 @-webkit-keyframes drip {
     0% {
@@ -77,9 +77,9 @@ html, body {
         height: 20px;
         top: 40%;
     }
-    100% { 
+    100% {
         width: 10px;
-        height: 10px; 
+        height: 10px;
         top: 90%;
     }
 }
