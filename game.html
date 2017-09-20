@@ -75,6 +75,7 @@
       var drops = [];
       let pollutionLevel = 0;
       pollutionGauge = null;
+      var finalScore = $(".score").text();
 
       $("#pollutionGauge").remove();
       $(".score").text("");
@@ -83,7 +84,7 @@
 
       $(".rain").after("<div class='overlay'>" +
       "<div class='instructions-container text-center'>" +
-      "<div class='instructions'>You Lost</div>" +
+      "<div class='instructions'>You Lost! Your final score was " + parseInt(finalScore, 10) + ".</div>" +
       "<button type='button' onclick='startGame()' class='btn btn-outline-dark btn-lg play'>" +
       "Retry</button></div></div>");
     }
