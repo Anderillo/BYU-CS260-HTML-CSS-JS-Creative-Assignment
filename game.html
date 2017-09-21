@@ -20,7 +20,7 @@
         <div class="instructions">
           The nearby city is polluting the ocean. Try to catch as much of the
           acid rain as possible before the ocean's toxicity reaches
-          irreversible levels.
+          irreversible levels. Use the arrow keys to control the bucket.
         </div>
         <button type="button" onclick="startGame()" class="btn btn-outline-dark btn-lg play">
           Play
@@ -42,7 +42,7 @@
   </body>
   <script type="text/javascript">
     window.addEventListener("keydown", function(e) {
-      var rate = 15;
+      var rate = 30;
       if (e.keyCode == 37)
       {
         e.preventDefault();
