@@ -166,3 +166,15 @@ body
 	position: absolute;
   z-index: 2005;
 }
+
+.bucket {
+  background-image: url(assets/bucket.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+	width: 100px;
+  height: 100px;
+  float: bottom;
+	position: absolute;
+  z-index: 10000;
+  visibility: hidden;
+}

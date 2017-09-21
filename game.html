@@ -38,14 +38,31 @@
     <div class="wave wave-2"></div>
     <div class="wave wave-3"></div>
     <div class="wave wave-4"></div>
+    <div class="bucket"></div>
   </body>
   <script type="text/javascript">
+    window.addEventListener("keydown", function(e) {
+      var rate = 15;
+      if (e.keyCode == 37)
+      {
+        e.preventDefault();
+        $('.bucket').css("left", "-=" + rate);
+      }
+      else if (e.keyCode == 39)
+      {
+        e.preventDefault();
+        $('.bucket').css("left", "+=" + rate);
+      }
+    }, false);
     var drops;
     var pollutionGauge;
     var pollution_timer;
     var score_timer;
     var pollutionLevel;
     var score;
+    var bucketWidth;
+    var dropWidth;
+    
     function animateWaves()
     {
       $(".wave-1").css("background-position", "-=4");
@@ -59,6 +76,16 @@
     {
       $(".overlay").remove();
       $(".score").text("0000000000");
+      $(".bucket").css("visibility", "visible");
+
+      dropWidth = 15;
+
+      bucketWidth = 90;
+      var bucketLeft = $(document).width() / 2.0 - bucketWidth / 2.0;
+      var bucketTop = 450;
+      $(".bucket").css('left', bucketLeft);
+      $(".bucket").css('top', bucketTop);
+
       pollutionLevel = 0;
       score = 0;
       drops = [];
@@ -87,6 +114,7 @@
       "<div class='instructions'>You Lost! Your final score was " + parseInt(finalScore, 10) + ".</div>" +
       "<button type='button' onclick='startGame()' class='btn btn-outline-dark btn-lg play'>" +
       "Retry</button></div></div>");
+      $(".bucket").css("visibility", "hidden");
     }
 
     function randRange(min, max)
@@ -97,8 +125,8 @@
     function createRain()
     {
       var drop_number = drops.length;
-      var target_drop_number = drop_number + 20;
-      for( i=drop_number;i<target_drop_number;i++)
+      var target_drop_number = drop_number + 10;
+      for(i=drop_number; i<target_drop_number; i++)
       {
         var dropLeft = randRange(0, $(document).width());
         var dropTop = randRange(-500, -30);
@@ -126,11 +154,14 @@
 
       for (var i = 0; i < drops.length; i++)
       {
+        var isInBucket = ($(drops[i]).position().top > $('.bucket').position().top
+            && $(drops[i]).position().left > $('.bucket').position().left
+            && $(drops[i]).position().left + dropWidth < $('.bucket').position().left + bucketWidth);
         // Update position
-        if ($(drops[i]).position().top >= $(window).height() - 200)
+        if ($(drops[i]).position().top >= $(window).height() - 200 || isInBucket)
         {
+          if (!isInBucket) pollutionGauge.updatePollutionGauge(increasePollutionLevel());
           $(drops[i]).remove();
-          pollutionGauge.updatePollutionGauge(increasePollutionLevel());
           if (pollutionLevel == 100)
           {
             for(var j=0; j < drops.length; j++)
